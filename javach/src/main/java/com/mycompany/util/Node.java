@@ -25,6 +25,8 @@ public class Node {
         this.port = port;
     }
 
+
+    //TODO: add case that 0 is the end of the range
     public static boolean inRange(int key, int[] keyRange) {
         if (keyRange == null) {
             return false;

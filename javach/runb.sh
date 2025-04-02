@@ -1,0 +1,1 @@
+java -cp target/javach-1.0-SNAPSHOT.jar com.mycompany.bootstrap.Bootstrap 

@@ -14,7 +14,6 @@ public class ServerThread implements Runnable {
     PrintWriter out;
     BufferedReader in;
     
-
     public ServerThread(Node node) throws IOException {
         this.self = node;
         server = new ServerSocket(self.port);
@@ -35,14 +34,10 @@ public class ServerThread implements Runnable {
                 String[] parsed = request.split(" ");
 
                 //handle request
+                //TODO: add request handlers
                 switch(parsed[0]) {
                     case "find": {
-                        int key = Integer.parseInt(parsed[1]);
-                        if (Node.inRange(key, self.keyRange)) {
-                            out.println("yes " + self.id);
-                        } else {
-                            out.println("no " + self.id + " " + self.sAddress.getHostName() + " " + self.sPort);
-                        }
+                        handleFind(parsed, out, self);
                     }
                     default: {
                         out.println("Unkown Request");
@@ -58,5 +53,15 @@ public class ServerThread implements Runnable {
                 
             }
         }
+    }
+
+    //TODO: Handlers here
+    public static void handleFind(String[] parsed, PrintWriter out, Node self) {
+        int key = Integer.parseInt(parsed[1]);
+        if (Node.inRange(key, self.keyRange)) {
+            out.println("yes " + self.id);
+        } else {
+            out.println("no " + self.id + " " + self.sAddress.getHostName() + " " + self.sPort);
+            }
     }
 }

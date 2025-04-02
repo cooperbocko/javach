@@ -1,18 +1,17 @@
-package com.mycompany.node;
+package com.mycompany.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 
 public class Node {
     public int id;
     public int port;
-    public ServerSocket sock;
+    //public ServerSocket sock;
     public HashMap<Integer, String> map = new HashMap<>();
     public int[] keyRange = new int[2]; //begin, end
     public InetAddress pAddress;//predecessor address
@@ -21,13 +20,12 @@ public class Node {
     public int sPort;
 
     public Node() {}
-    public Node(int id, int port) throws IOException{
+    public Node(int id, int port) /*throws IOException*/{
         this.id = id;
         this.port = port;
-        this.sock = new ServerSocket(port);
     }
 
-    public boolean inRange(int key, int[] keyRange) {
+    public static boolean inRange(int key, int[] keyRange) {
         if (keyRange == null) {
             return false;
         }
@@ -37,15 +35,16 @@ public class Node {
         return false;
     }
 
-    public Find find(int key) throws IOException{
+    public static Find find(int key, Node node) throws IOException{
         Find res = new Find();
-        res.address = sAddress;
-        res.port = sPort;
+        res.address = node.sAddress;
+        res.port = node.sPort;
         int[] range = new int[2];
         Socket next;
         PrintWriter out;
         BufferedReader in;
         
+        //TODO: change this!
         while (!inRange(key, range)){
             //contact next node
             next = new Socket(res.address, res.port);
@@ -57,6 +56,7 @@ public class Node {
 
             //get response yes: "yes id" no: "no id ip port"
             String response = in.readLine();
+            System.out.println(response);
             next.close(); //only need to get response
             String[] resp = response.split(" ");
             res.ids.add(Integer.parseInt(resp[1]));

@@ -72,4 +72,17 @@ public class Node {
         }
         return null;
     }
+
+    public static void Insert(int key, String value, Find address) throws IOException{
+        //contact node
+        Socket node = new Socket(address.address, address.port);
+        PrintWriter out = new PrintWriter(node.getOutputStream(), true);
+        BufferedReader in = new BufferedReader(new InputStreamReader(node.getInputStream()));
+        out.println("insert " + key + " " + value);
+
+        //get response ok or error
+        String response = in.readLine();
+        System.out.println(response);
+        node.close();
+    }
 }

@@ -38,9 +38,15 @@ public class ServerThread implements Runnable {
                 switch(parsed[0]) {
                     case "find": {
                         handleFind(parsed, out, self);
+                        break;
+                    }
+                    case "insert": {
+                        handleInsert(Integer.parseInt(parsed[1]), request.substring(8 + parsed[1].length()),  out, self);
+                        break;
                     }
                     default: {
                         out.println("Unkown Request");
+                        break;
                     }
                 }
 
@@ -63,5 +69,11 @@ public class ServerThread implements Runnable {
         } else {
             out.println("no " + self.id + " " + self.sAddress.getHostName() + " " + self.sPort);
             }
+    }
+
+    public static void handleInsert(int key, String value, PrintWriter out, Node self) {
+        self.map.put(key, value);
+        out.println(("inserted!"));
+        System.out.println(self.map.toString());
     }
 }

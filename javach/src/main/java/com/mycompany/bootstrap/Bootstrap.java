@@ -20,8 +20,11 @@ public class Bootstrap {
         self.keyRange = range;
 
         //test to see if find works
-        Find data = Node.find(21, self);
+        Find data = Node.find(11, self);
         System.out.println(data.ids.toString());
+
+        //test insert
+        Node.Insert(11, "new entry!", data);
 
         //TODO: start server thread
         //TODO: start user thread

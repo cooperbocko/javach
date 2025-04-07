@@ -86,7 +86,7 @@ public class ServerThread implements Runnable {
         }
     }
 
-    //TODO: Handlers here
+    //TODO: Handlers here -> main functions should send a reponse back, any helpers should not
     //finds specific node
     //find key
     public static void handleFind(String[] parsed, PrintWriter out, Node self) {

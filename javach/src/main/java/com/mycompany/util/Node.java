@@ -91,7 +91,12 @@ public class Node {
         //contact node
         Socket node = new Socket(address.address, address.port);
         PrintWriter out = new PrintWriter(node.getOutputStream(), true);
+        BufferedReader in = new BufferedReader(new InputStreamReader(node.getInputStream()));
         out.println(message);
+
+        //get response
+        String response = in.readLine();
+        System.out.println(response);
         node.close();
     }
 

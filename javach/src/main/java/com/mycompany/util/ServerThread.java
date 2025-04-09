@@ -46,9 +46,11 @@ public class ServerThread implements Runnable {
                         break;
                     }
                     case "lookup": {
+                        //TODO: lookup
                         break;
                     }
                     case "delete": {
+                        //TODO: delete
                         break;
                     }
                     //contact bootstrap initally
@@ -65,6 +67,10 @@ public class ServerThread implements Runnable {
                         handleEnterHelp(out, in, self, client);
                         break;
                     }
+                    case "exit": {
+                        //TODO: exit
+                        break;
+                    }
                     case "update-s": {
                         handleUpdateS(parsed, self);
                         break;
@@ -74,7 +80,6 @@ public class ServerThread implements Runnable {
                         break;
                     }
                 }
-
                 //close connection
                 client.close();
             } catch (IOException e) {

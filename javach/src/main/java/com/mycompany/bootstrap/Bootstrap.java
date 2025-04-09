@@ -33,6 +33,8 @@ public class Bootstrap {
         Node.Insert(11, "new entry!", data);
         */
 
+        //TODO start server thread on diff thread
+
         ServerThread x = new ServerThread(self);
         Thread s = new Thread(x);
         s.start();
@@ -47,7 +49,7 @@ public class Bootstrap {
         System.out.println(self.sPort);
         System.out.println(self.map.get(749));
 
-        //TODO: start server thread
-        //TODO: start user thread
+        
+        //TODO: get user input to call functions 
     }
 }

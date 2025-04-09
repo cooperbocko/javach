@@ -22,8 +22,7 @@ public class Nameserver {
         self.pAddress = InetAddress.getByName("localhost");
         self.pPort = 3001;
 
-        //TODO: start user thread immediately
-        //TODO: start server thread after being entered into the system
+        //TODO: start server thread
         //test running of thread
         ServerThread x = new ServerThread(self);
         Thread s = new Thread(x);
@@ -37,6 +36,8 @@ public class Nameserver {
         
         System.out.println(self.pPort);
         System.out.println(self.sPort);
+
+        //TODO: handle user input to call functions
         
     }
 }

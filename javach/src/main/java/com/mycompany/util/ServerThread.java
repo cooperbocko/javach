@@ -101,7 +101,7 @@ public class ServerThread implements Runnable {
             out.println("yes " + self.id);
         } else {
             out.println("no " + self.id + " " + self.sAddress.getHostName() + " " + self.sPort);
-            }
+        }
     }
 
     //inserts into nodes table
@@ -158,6 +158,30 @@ public class ServerThread implements Runnable {
 
     public static void exitHelp(PrintWriter out, BufferedReader in, Node self, Socket client) throws IOException {
 
+        //Open a socket to communicate with the exiting node's predecessor
+        Socket predSocket = new Socket(self.pAddress, self.pPort);
+        PrintWriter predOut = new PrintWriter(predSocket.getOutputStream(), true);
+
+        //Send the predecessor the current node's successor information
+        String predUpdate = self.sAddress + " " + self.sPort;
+        predOut.println(predUpdate);
+
+
+        //Open a socket to communicate with the exiting node's successor
+        Socket succSocket = new Socket(self.sAddress, self.sPort);
+        PrintWriter succOut = new PrintWriter(succSocket.getOutputStream(), true);
+
+        //Hand over the exiting node's key range to its successor
+        String exitNodeRange = "" + self.keyRange[0] + " " + self.keyRange[1];
+        succOut.println(exitNodeRange);
+
+        //Hand over the exiting node's values to its successor
+
+
+        predSocket.close();
+        predOut.close();
+        succSocket.close();
+        succOut.close();
     }
 
     public static void handleUpdateS(String[] parsed, Node self) throws IOException{

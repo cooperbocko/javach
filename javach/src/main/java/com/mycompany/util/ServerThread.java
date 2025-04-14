@@ -69,6 +69,7 @@ public class ServerThread implements Runnable {
                     }
                     case "exit": {
                         //TODO: exit
+                        exitHelp(out, in, self, client);
                         break;
                     }
                     case "update-s": {
@@ -153,6 +154,10 @@ public class ServerThread implements Runnable {
         resp = in.readLine().split(" ");
         self.sAddress = InetAddress.getByName(resp[0]);
         self.sPort = Integer.parseInt(resp[1]);
+    }
+
+    public static void exitHelp(PrintWriter out, BufferedReader in, Node self, Socket client) throws IOException {
+
     }
 
     public static void handleUpdateS(String[] parsed, Node self) throws IOException{

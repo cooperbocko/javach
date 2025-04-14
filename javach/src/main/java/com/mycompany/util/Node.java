@@ -179,4 +179,10 @@ public class Node {
         self.pAddress = address.address;
         self.pPort = address.port;
     }
+
+    public static void exit(/*Not sure what parameters to put here yet*/) throws IOException {
+        //Contact the predecessor and have it update its successor to the current node's successor
+
+        //Contract the successor and hand over the current node's key-value pairs and key range
+    }
 }

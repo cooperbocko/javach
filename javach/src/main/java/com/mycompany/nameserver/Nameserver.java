@@ -1,5 +1,6 @@
 package com.mycompany.nameserver;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -14,16 +15,56 @@ public class Nameserver {
 
     public static void main(String args[]) throws IOException {
         //TODO: set up node info from config file
+        if (args.length != 1) {
+            System.err.println("Requires nsConfigFile.");
+            System.exit(1);
+        }
+
+        String configPath = args[0];
+        File configFile = new File(configPath);
+        if (!configFile.exists()) {
+            System.err.println("File not found.");
+            System.exit(1);
+        }
+
+        try (Scanner scanner = new Scanner(configFile)) {
+            int id = Integer.parseInt(scanner.nextLine().trim());
+            int port = Integer.parseInt(scanner.nextLine().trim());
+            String[] bsInfo = scanner.nextLine().trim().split("\\s+");
+            String bsIP = bsInfo[0];
+            int bsPort = Integer.parseInt(bsInfo[1]);
+
+            self = new Node(id, port);
+            self.address = InetAddress.getLocalHost();
+            self.port = port;
+
+            self.sAddress = InetAddress.getByName(bsIP);
+            self.sPort = bsPort;
+            self.pAddress = self.sAddress;
+            self.pPort = bsPort;
+
+            System.out.println("Nameserver initialized:");
+            System.out.println(" - ID: " + id);
+            System.out.println(" - Listening on port: " + port);
+            System.out.println(" - Bootstrap at: " + bsIP + ":" + bsPort);
+
+        } catch (Exception e) {
+            System.err.println("Error parsing.");
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+
         //this is test info
-        self = new Node(500, 3002);
-        int[] range = {1, 500};
-        self.address = InetAddress.getByName("localhost");
-        self.port = 3002;
-        self.keyRange = range;
-        self.sAddress = InetAddress.getByName("localhost");
-        self.sPort = 3001;
-        self.pAddress = InetAddress.getByName("localhost");
-        self.pPort = 3001;
+        // self = new Node(500, 3002);
+        // int[] range = {1, 500};
+        // self.address = InetAddress.getByName("localhost");
+        // self.port = 3002;
+        // self.keyRange = range;
+        // self.sAddress = InetAddress.getByName("localhost");
+        // self.sPort = 3001;
+        // self.pAddress = InetAddress.getByName("localhost");
+        // self.pPort = 3001;
 
         //TODO: start server thread
         //test running of thread

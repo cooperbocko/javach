@@ -1,7 +1,10 @@
 package com.mycompany.nameserver;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.Socket;
+import java.util.Scanner;
 
 import com.mycompany.util.Node;
 import com.mycompany.util.ServerThread;
@@ -37,7 +40,26 @@ public class Nameserver {
         System.out.println(self.pPort);
         System.out.println(self.sPort);
 
+
         //TODO: handle user input to call functions
-        
+        //I think I did this the way you guys wanted, if not feel free to delete it or rewrite it
+
+        //Open a socket to send commands to the server thread
+        Socket socket = new Socket("localhost", self.port);
+        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+
+        Scanner input = new Scanner(System.in);
+        String cmd = "";        
+        while (!cmd.equalsIgnoreCase("quit")) {
+            System.out.print("Enter a command: ");
+            cmd = input.nextLine().trim();
+
+            //Send the command to the server thread
+            out.println(cmd);
+        }
+
+        socket.close();
+        out.close();
+        input.close();
     }
 }

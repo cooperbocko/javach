@@ -44,9 +44,9 @@ public class Nameserver {
             self.pPort = bsPort;
 
             System.out.println("Nameserver initialized:");
-            System.out.println("ID: " + id);
-            System.out.println("Listening on port: " + port);
-            System.out.println("Bootstrap at: " + bsIP + ":" + bsPort);
+            System.out.println(" - ID: " + id);
+            System.out.println(" - Listening on port: " + port);
+            System.out.println(" - Bootstrap at: " + bsIP + ":" + bsPort);
 
         } catch (Exception e) {
             System.err.println("Error parsing.");

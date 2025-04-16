@@ -167,21 +167,36 @@ public class ServerThread implements Runnable {
         predOut.println(predUpdate);
 
 
+
         //Open a socket to communicate with the exiting node's successor
-        Socket succSocket = new Socket(self.sAddress, self.sPort);
-        PrintWriter succOut = new PrintWriter(succSocket.getOutputStream(), true);
+        Socket successorSocket = new Socket(self.sAddress, self.sPort);
+        PrintWriter successorOut = new PrintWriter(successorSocket.getOutputStream(), true);
 
         //Hand over the exiting node's key range to its successor
         String exitNodeRange = "" + self.keyRange[0] + " " + self.keyRange[1];
-        succOut.println(exitNodeRange);
+        successorOut.println(exitNodeRange);
 
         //Hand over the exiting node's values to its successor
+        //Build one string with the keys and one string with the values
+        StringBuilder strValues = new StringBuilder();
+        StringBuilder keyValues = new StringBuilder();
+        for (int i = self.keyRange[0]; i < self.keyRange[1]; i++) {
+            String strToAdd = self.map.get(i);
+            if (strToAdd != null) {
+                keyValues.append(i + " ");
+                strValues.append(strToAdd + " ");
+            }
+        }
+
+        //Send the key value pairs to the successor
+        String strToSend = keyValues.toString() + ":" + strValues.toString();
+        successorOut.println(strToSend);
 
 
         predSocket.close();
         predOut.close();
-        succSocket.close();
-        succOut.close();
+        successorSocket.close();
+        successorOut.close();
     }
 
     public static void handleUpdateS(String[] parsed, Node self) throws IOException{

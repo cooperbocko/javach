@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Scanner;
 
+import com.mycompany.util.Find;
 import com.mycompany.util.Node;
 import com.mycompany.util.ServerThread;
 
@@ -64,5 +65,32 @@ public class Bootstrap {
         s.start();
 
         //TODO: get user input to call functions 
+        Scanner input = new Scanner(System.in);
+        String cmd = "";        
+        while (!cmd.equalsIgnoreCase("quit")) {
+            System.out.print("Enter a command: ");
+            cmd = input.nextLine().trim();
+            String[] parsed = cmd.split(" ");
+            switch (parsed[0]) {
+                case "insert": {
+                    //Handles insert, other commands should use Node.sendM to send messages to the specified node
+                    System.out.println("Inserting!");
+                    int key = Integer.parseInt(parsed[1]);
+                    Find node = Node.find(key, self);
+                    Node.sendM(node, "insert " + key + " " + parsed[2]);
+                    break;
+                }
+                case "lookup": {
+                    break;
+                }
+                case "delete": {
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
+        }
+        input.close();
     }
 }

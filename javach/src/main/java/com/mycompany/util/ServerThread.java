@@ -147,6 +147,10 @@ public class ServerThread implements Runnable {
         int nKeys = Integer.parseInt(in.readLine());
         for (int i = 0; i < nKeys; i++) {
             resp = in.readLine().split(" ", 2);
+            //TODO: bad way to check null but oh well
+            if (resp[1].equals("null")) {
+                continue;
+            }
             self.map.put(Integer.parseInt(resp[0]), resp[1]);
         }
 

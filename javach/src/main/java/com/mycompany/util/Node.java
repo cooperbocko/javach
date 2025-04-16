@@ -136,14 +136,16 @@ public class Node {
         out.println("enter-help");
 
         //send new key range-> if first = 0, that is the bootid so it is a special case
+        int[] newRange = {self.keyRange[0], key};
         if (self.keyRange[0] == 0) {
             out.println("" + (self.keyRange[0] + 1) + " " + key);
+            int[] temp = {self.keyRange[0] + 1, key};
+            newRange = temp;
         } else {
             out.println("" + (self.keyRange[0] + " " + key));
         }
 
         //send keys
-        int[] newRange = {self.keyRange[0], key};
         int nKeys = Node.keyRange(newRange);
         out.println(nKeys);
         //two cases -> low,high high,low

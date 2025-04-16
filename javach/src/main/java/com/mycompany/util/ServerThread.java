@@ -133,8 +133,8 @@ public class ServerThread implements Runnable {
     public static void handleInsert(int key, String value, PrintWriter out, Node self) {
         System.out.println("Inserting key: " + key + " with value: \"" + value + "\" into node " + self.id);
         self.map.put(key, value);
-        // out.println(("inserted!"));
-        // System.out.println(self.map.toString());
+        out.println(("inserted!"));
+        System.out.println(self.map.toString());
     }
 
     public static String handleLookup(int key, PrintWriter out, Node self, String pathSoFar) throws IOException {

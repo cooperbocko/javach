@@ -55,7 +55,7 @@ public class Node {
         Socket next;
         PrintWriter out;
         BufferedReader in;
-        
+
         //if not self
         while (!inRange(key, range)){
             //contact next node
@@ -135,8 +135,12 @@ public class Node {
         PrintWriter out = new PrintWriter(node.getOutputStream(), true);
         out.println("enter-help");
 
-        //send new key range
-        out.println("" + self.keyRange[0] + " " + key);
+        //send new key range-> if first = 0, that is the bootid so it is a special case
+        if (self.keyRange[0] == 0) {
+            out.println("" + (self.keyRange[0] + 1) + " " + key);
+        } else {
+            out.println("" + (self.keyRange[0] + " " + key));
+        }
 
         //send keys
         int[] newRange = {self.keyRange[0], key};

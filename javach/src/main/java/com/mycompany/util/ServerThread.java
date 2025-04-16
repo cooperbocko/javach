@@ -114,6 +114,12 @@ public class ServerThread implements Runnable {
     //send back node info that needs to entered into
     //enter-b id
     public static void handleEnterB(int id, PrintWriter out, Node self) throws IOException{
+        //check if self so it does not block on its own request
+        if (Node.inRange(id, self.keyRange)) {
+            out.println(self.address.getHostName() + " " + self.port);
+            return;
+        }
+
         Find node = Node.find(id, self);
         out.println(node.address.getHostName() + " " + node.port);
     }
@@ -134,7 +140,7 @@ public class ServerThread implements Runnable {
 
         //get new key range
         resp = in.readLine().split(" ");
-        int[] range = {Integer.parseInt(resp[0]), Integer.parseInt(resp[0])};
+        int[] range = {Integer.parseInt(resp[0]), Integer.parseInt(resp[1])};
         self.keyRange = range;
 
         //get keys

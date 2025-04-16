@@ -42,11 +42,36 @@ public class ServerThread implements Runnable {
                         break;
                     }
                     case "insert": {
-                        handleInsert(Integer.parseInt(parsed[1]), request.substring(8 + parsed[1].length()),  out, self);
+                        int key = Integer.parseInt(parsed[1]);
+                        String value = request.substring(request.indexOf(parsed[2])).trim();
+                        Find dest = Node.find(key, self); // Find node responsible for key 
+
+                        // If current node is responsible 
+                        if (dest.address.equals(self.address) && dest.port == self.port) {
+                            handleInsert(key, value, out, self);
+                        } else { // Forward insert request to responsible node
+                            try (
+                                Socket sock = new Socket(dest.address, dest.port);
+                                PrintWriter remoteOut = new PrintWriter(sock.getOutputStream(), true);
+                                BufferedReader remoteIn = new BufferedReader(new InputStreamReader(sock.getInputStream()))
+                            ) {
+                                remoteOut.println("insert " + key + " " + value); // Send command
+                                String response = remoteIn.readLine();
+                                out.println(response); 
+                            }
+                        }                    
                         break;
                     }
                     case "lookup": {
-                        //TODO: lookup
+                        int key = Integer.parseInt(parsed[1]);
+                        StringBuilder pathBuilder = new StringBuilder();
+                        for (int i = 2; i < parsed.length; i++) {
+                            pathBuilder.append(parsed[i]).append(" ");
+                        } // Tracks nodes traversed so far 
+                        String path = pathBuilder.toString();
+                        // handleLookup(key, out, self, path);
+                        String response = handleLookup(key, out, self, path);
+                        out.println(response);
                         break;
                     }
                     case "delete": {
@@ -106,11 +131,49 @@ public class ServerThread implements Runnable {
     //inserts into nodes table
     //insert key value
     public static void handleInsert(int key, String value, PrintWriter out, Node self) {
+        System.out.println("Inserting key: " + key + " with value: \"" + value + "\" into node " + self.id);
         self.map.put(key, value);
-        out.println(("inserted!"));
-        System.out.println(self.map.toString());
+        // out.println(("inserted!"));
+        // System.out.println(self.map.toString());
     }
 
+    public static String handleLookup(int key, PrintWriter out, Node self, String pathSoFar) throws IOException {
+        pathSoFar += self.id + " ";
+        StringBuilder response = new StringBuilder();
+
+        if (Node.inRange(key, self.keyRange)) {
+            // System.out.println("Key " + key + " is in range for node " + self.id);
+            if (self.map.containsKey(key)) {
+                // out.println("value: " + self.map.get(key));
+                response.append("value: ").append(self.map.get(key)).append("\n");
+                System.out.printf("[Node %d] Key %d found with value: \"%s\"\n", self.id, key, self.map.get(key));
+            } else {
+                // out.println("Key not found");
+                response.append("Key not found").append("\n");
+                System.out.printf("[Node %d] Key %d not found in map\n", self.id, key);
+            }
+            // out.println("server: " + self.id);
+            // out.println("path: " + pathSoFar.trim());
+            response.append("server: ").append(self.id).append("\n");
+            response.append("path: ").append(pathSoFar.trim());    
+        } else {
+            System.out.printf("[Node %d] Key %d not in range. Forwarding to successor (%s:%d)\n",
+                self.id, key, self.sAddress.getHostName(), self.sPort);
+            try (
+                Socket nextNode = new Socket(self.sAddress, self.sPort);
+                PrintWriter nextOut = new PrintWriter(nextNode.getOutputStream(), true);
+                BufferedReader nextIn = new BufferedReader(new InputStreamReader(nextNode.getInputStream()))
+            ) {
+                nextOut.println("lookup " + key + " " + pathSoFar.trim());
+                String line;
+                while ((line = nextIn.readLine()) != null) {
+                    response.append(line).append("\n");
+                    // out.println(line);
+                }
+            }
+        }
+        return response.toString();
+    }
     //send back node info that needs to entered into
     //enter-b id
     public static void handleEnterB(int id, PrintWriter out, Node self) throws IOException{

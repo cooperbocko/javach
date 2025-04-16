@@ -63,6 +63,30 @@ public class Bootstrap {
         Thread s = new Thread(x);
         s.start();
 
-        //TODO: get user input to call functions 
+        // just quick user interaction thing 
+        Scanner userInput = new Scanner(System.in);
+        while (true) {
+            System.out.print(">> ");
+            String command = userInput.nextLine().trim();
+
+            if (command.isEmpty()) continue;
+            if (command.equalsIgnoreCase("exit")) {
+                System.out.println("Shutting down...");
+                System.exit(0);
+            }
+
+            try (var sock = new java.net.Socket(self.address, self.port);
+                var out = new java.io.PrintWriter(sock.getOutputStream(), true);
+                var in = new java.io.BufferedReader(new java.io.InputStreamReader(sock.getInputStream()))) {
+
+                out.println(command);
+                String line;
+                while ((line = in.readLine()) != null && !line.isEmpty()) {
+                    System.out.println(line);
+                }
+            } catch (IOException e) {
+                System.err.println("Error processing command: " + e.getMessage());
+            }
+        }
     }
 }

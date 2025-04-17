@@ -193,6 +193,10 @@ public class Node {
         String update = "update-s " + self.sAddress + " " + self.sPort;
         predOut.println(update);
 
+        //Close the predecessor connections
+        predSocket.close();
+        predOut.close();
+
 
 
         //Open a socket to communicate with the exiting node's successor
@@ -209,12 +213,8 @@ public class Node {
 
         //Hand over the exiting node's key value pairs to its successor.
         successorOut.println(buildKeyValuePairsString(self));
-        
 
-
-        //Close all of the open connections
-        predSocket.close();
-        predOut.close();
+        //Close the successor connections
         successorSocket.close();
         successorOut.close();
     }

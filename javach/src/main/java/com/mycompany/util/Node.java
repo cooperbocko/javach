@@ -190,14 +190,18 @@ public class Node {
         //Contact the predecessor and have it update its successor to the exiting node's successor
         Socket predSocket = new Socket(self.pAddress, self.pPort);
         PrintWriter predOut = new PrintWriter(predSocket.getOutputStream(), true);
-        String updatePredecessor = "update-s " + self.sAddress + " " + self.sPort;
-        predOut.println(updatePredecessor);
+        String update = "update-s " + self.sAddress + " " + self.sPort;
+        predOut.println(update);
 
 
 
         //Open a socket to communicate with the exiting node's successor
         Socket successorSocket = new Socket(self.sAddress, self.sPort);
         PrintWriter successorOut = new PrintWriter(successorSocket.getOutputStream(), true);
+
+        //Have the exiting node's successor update its predecessor to the exiting node's predecessor
+        update = "update-p " + self.pAddress + " " + self.pPort;
+        successorOut.println(update);
 
         //Hand over the exiting node's key range to its successor
         String exitNodeRange = "exit-update-key-range " + self.keyRange[0] + " " + self.keyRange[1];

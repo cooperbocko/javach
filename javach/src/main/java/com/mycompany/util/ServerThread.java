@@ -79,6 +79,10 @@ public class ServerThread implements Runnable {
                         handleUpdateS(parsed, self);
                         break;
                     }
+                    case "update-p": {
+                        handleUpdateP(parsed, self);
+                        break;
+                    }
                     default: {
                         out.println("Unkown Request");
                         break;
@@ -197,5 +201,10 @@ public class ServerThread implements Runnable {
     public static void handleUpdateS(String[] parsed, Node self) throws IOException{
         self.sAddress = InetAddress.getByName(parsed[1]);
         self.sPort = Integer.parseInt(parsed[2]);
+    }
+
+    public static void handleUpdateP(String[] parsed, Node self) throws IOException {
+        self.pAddress = InetAddress.getByName(parsed[1]);
+        self.pPort = Integer.parseInt(parsed[2]);
     }
 }

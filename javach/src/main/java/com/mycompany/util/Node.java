@@ -186,9 +186,53 @@ public class Node {
         self.pPort = address.port;
     }
 
-    public static void exit(/*Not sure what parameters to put here yet*/) throws IOException {
-        //Contact the predecessor and have it update its successor to the current node's successor
+    public static void exit(Node self) throws IOException {
+        //Contact the predecessor and have it update its successor to the exiting node's successor
+        Socket predSocket = new Socket(self.pAddress, self.pPort);
+        PrintWriter predOut = new PrintWriter(predSocket.getOutputStream(), true);
+        String updatePredecessor = "update-s " + self.sAddress + " " + self.sPort;
+        predOut.println(updatePredecessor);
 
-        //Contract the successor and hand over the current node's key-value pairs and key range
+
+
+        //Open a socket to communicate with the exiting node's successor
+        Socket successorSocket = new Socket(self.sAddress, self.sPort);
+        PrintWriter successorOut = new PrintWriter(successorSocket.getOutputStream(), true);
+
+        //Hand over the exiting node's key range to its successor
+        String exitNodeRange = "exit-update-key-range " + self.keyRange[0] + " " + self.keyRange[1];
+        successorOut.println(exitNodeRange);
+
+        //Hand over the exiting node's key value pairs to its successor.
+        successorOut.println(buildKeyValuePairsString(self));
+        
+
+
+        //Close all of the open connections
+        predSocket.close();
+        predOut.close();
+        successorSocket.close();
+        successorOut.close();
+    }
+
+    private static String buildKeyValuePairsString(Node self) {
+        StringBuilder bldr = new StringBuilder("exit-update-key-values ");
+        int[] keyRange = {self.keyRange[0], self.keyRange[1]};
+        
+        //To handle the high-low case.
+        if (keyRange[0] > keyRange[1]) {
+            int placeholder = keyRange[0];
+            keyRange[0] = keyRange[1];
+            keyRange[1] = placeholder;
+        }
+
+        for (int i = keyRange[0]; i < keyRange[1]; i++) {
+            String valueToAdd = self.map.get(i);
+            if (valueToAdd != null) {
+                bldr.append(i + " " + valueToAdd + " ");
+            }
+        }
+
+        return bldr.toString();
     }
 }

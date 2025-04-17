@@ -67,9 +67,12 @@ public class ServerThread implements Runnable {
                         handleEnterHelp(out, in, self, client);
                         break;
                     }
-                    case "exit": {
-                        //TODO: exit
-                        exitHelp(out, in, self, client);
+                    case "exit-update-key-range": {
+                        updateKeyRange(parsed, self);
+                        break;
+                    }
+                    case "exit-update-key-values": {
+                        updateKeyValues(parsed, self);
                         break;
                     }
                     case "update-s": {
@@ -166,47 +169,29 @@ public class ServerThread implements Runnable {
         self.sPort = Integer.parseInt(resp[1]);
     }
 
-    public static void exitHelp(PrintWriter out, BufferedReader in, Node self, Socket client) throws IOException {
+    /**
+     * When a node exits the system, update its successor's key range
+     * @param parsed The exiting node's key range
+     * @param self The exiting node's successor
+     */
+    private static void updateKeyRange(String[] parsed, Node self) {
+        //I think only the first value in the key range needs to be updated
+        self.keyRange[0] = Integer.parseInt(parsed[1]);
+    }
 
-        //Open a socket to communicate with the exiting node's predecessor
-        Socket predSocket = new Socket(self.pAddress, self.pPort);
-        PrintWriter predOut = new PrintWriter(predSocket.getOutputStream(), true);
-
-        //Send the predecessor the current node's successor information
-        String predUpdate = self.sAddress + " " + self.sPort;
-        predOut.println(predUpdate);
-
-
-
-        //Open a socket to communicate with the exiting node's successor
-        Socket successorSocket = new Socket(self.sAddress, self.sPort);
-        PrintWriter successorOut = new PrintWriter(successorSocket.getOutputStream(), true);
-
-        //Hand over the exiting node's key range to its successor
-        String exitNodeRange = "" + self.keyRange[0] + " " + self.keyRange[1];
-        successorOut.println(exitNodeRange);
-
-        //Hand over the exiting node's values to its successor
-        //Build one string with the keys and one string with the values
-        StringBuilder strValues = new StringBuilder();
-        StringBuilder keyValues = new StringBuilder();
-        for (int i = self.keyRange[0]; i < self.keyRange[1]; i++) {
-            String strToAdd = self.map.get(i);
-            if (strToAdd != null) {
-                keyValues.append(i + " ");
-                strValues.append(strToAdd + " ");
-            }
+    /**
+     * When a node exits the system, ake the key value pairs from the exiting node 
+     * and add them to its successor's map.
+     * 
+     * @param parsed The key value pairs from the exiting node.
+     * @param self The exiting node's successor.
+     */
+    private static void updateKeyValues(String[] parsed, Node self) {
+        //I wrote i += 2 instead of i++ because the value at i is the key
+        //and the value at i + 1 is the value associated with the key
+        for (int i = 1; i < parsed.length; i += 2) {
+            self.map.put(Integer.parseInt(parsed[i]), parsed[i + 1]);
         }
-
-        //Send the key value pairs to the successor
-        String strToSend = keyValues.toString() + ":" + strValues.toString();
-        successorOut.println(strToSend);
-
-
-        predSocket.close();
-        predOut.close();
-        successorSocket.close();
-        successorOut.close();
     }
 
     public static void handleUpdateS(String[] parsed, Node self) throws IOException{

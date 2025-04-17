@@ -76,6 +76,9 @@ public class Nameserver {
                     Node.sendM(node, "enter " + self.id + " " + self.address.getHostName() + " " + self.port);
                     System.out.println("Updated keyrange: " + self.keyRange[0] + "-" + self.keyRange[1]);
                 }
+                case "exit": {
+                    Node.exit(self);
+                }
             }
         }
         input.close();

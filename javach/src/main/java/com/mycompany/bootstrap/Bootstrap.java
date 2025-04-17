@@ -81,6 +81,17 @@ public class Bootstrap {
                     break;
                 }
                 case "lookup": {
+                    int key = Integer.parseInt(parsed[1]);
+                    Find node = Node.find(key, self);
+                    Node.sendM(node, "lookup " + key);
+                    // String response = "Lookup result for key " + key + ": ";
+                    String response = "";
+                    if (node != null && node.ids != null && !node.ids.isEmpty()) {
+                        response += "Node path: " + node.ids + " -> Final node: " + node.ids.get(node.ids.size() - 1);
+                    } else {
+                        response += "Key not found.";
+                    }
+                    System.out.println(response);            
                     break;
                 }
                 case "delete": {

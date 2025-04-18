@@ -90,7 +90,7 @@ public class Bootstrap {
                     // String response = "Lookup result for key " + key + ": ";
                     String response = "";
                     if (node != null && node.ids != null && !node.ids.isEmpty()) {
-                        response += "Node path: " + node.ids + " -> Final node: " + node.ids.get(node.ids.size() - 1);
+                        response += "Node path: " + node.ids;
                     } else {
                         response += "Key not found.";
                     }

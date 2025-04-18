@@ -121,7 +121,7 @@ public class ServerThread implements Runnable {
             } else {
                 response = "Key not found";
             }    
-            out.println("Key: " + self.id + ", " + response);
+            out.println("Key: " + key + ", " + response);
         } catch (Exception e) {
             out.println("Error during lookup");
             e.printStackTrace();

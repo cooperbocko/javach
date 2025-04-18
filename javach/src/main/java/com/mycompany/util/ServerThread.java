@@ -184,7 +184,7 @@ public class ServerThread implements Runnable {
     }
 
     /**
-     * When a node exits the system, ake the key value pairs from the exiting node 
+     * When a node exits the system, take the key value pairs from the exiting node 
      * and add them to its successor's map.
      * 
      * @param parsed The key value pairs from the exiting node.

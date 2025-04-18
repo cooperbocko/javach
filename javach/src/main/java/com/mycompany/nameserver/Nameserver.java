@@ -75,10 +75,12 @@ public class Nameserver {
                     Find node = Node.enterB(self.id, boot);
                     Node.sendM(node, "enter " + self.id + " " + self.address.getHostName() + " " + self.port);
                     System.out.println("Updated keyrange: " + self.keyRange[0] + "-" + self.keyRange[1]);
+                    break;
                 }
                 case "exit": {
                     String response = Node.exit(self);
                     System.out.println(response);
+                    break;
                 }
             }
         }

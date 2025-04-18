@@ -46,7 +46,7 @@ public class ServerThread implements Runnable {
                         break;
                     }
                     case "lookup": {
-                        //TODO: lookup
+                        handleLookup(parsed, out, self);
                         break;
                     }
                     case "delete": {
@@ -128,6 +128,24 @@ public class ServerThread implements Runnable {
         } else {
             out.println("Key was not present.");
         }
+    }
+    
+    public static void handleLookup(String[] parsed, PrintWriter out, Node self) {
+        try {
+            int key = Integer.parseInt(parsed[1]);
+            String value = self.map.get(key);
+            String response;
+            if (value != null) {
+                response = "Value: " + value;
+            } else {
+                response = "Key not found";
+            }    
+            out.println("Key: " + key + ", " + response);
+        } catch (Exception e) {
+            out.println("Error during lookup");
+            e.printStackTrace();
+        }
+    
     }
 
     //send back node info that needs to entered into

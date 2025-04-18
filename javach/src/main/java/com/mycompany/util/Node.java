@@ -209,37 +209,43 @@ public class Node {
         self.pPort = address.port;
     }
 
-    public static void exit(Node self) throws IOException {
-        //Contact the predecessor and have it update its successor to the exiting node's successor
-        Socket predSocket = new Socket(self.pAddress, self.pPort);
-        PrintWriter predOut = new PrintWriter(predSocket.getOutputStream(), true);
-        String update = "update-s " + self.sAddress + " " + self.sPort;
-        predOut.println(update);
+    public static String exit(Node self) throws IOException {
+        try {
+            //Contact the predecessor and have it update its successor to the exiting node's successor
+            Socket predSocket = new Socket(self.pAddress, self.pPort);
+            PrintWriter predOut = new PrintWriter(predSocket.getOutputStream(), true);
+            String update = "update-s " + self.sAddress + " " + self.sPort;
+            predOut.println(update);
 
-        //Close the predecessor connections
-        predSocket.close();
-        predOut.close();
+            //Close the predecessor connections
+            predSocket.close();
+            predOut.close();
 
 
 
-        //Open a socket to communicate with the exiting node's successor
-        Socket successorSocket = new Socket(self.sAddress, self.sPort);
-        PrintWriter successorOut = new PrintWriter(successorSocket.getOutputStream(), true);
+            //Open a socket to communicate with the exiting node's successor
+            Socket successorSocket = new Socket(self.sAddress, self.sPort);
+            PrintWriter successorOut = new PrintWriter(successorSocket.getOutputStream(), true);
 
-        //Have the exiting node's successor update its predecessor to the exiting node's predecessor
-        update = "update-p " + self.pAddress + " " + self.pPort;
-        successorOut.println(update);
+            //Have the exiting node's successor update its predecessor to the exiting node's predecessor
+            update = "update-p " + self.pAddress + " " + self.pPort;
+            successorOut.println(update);
 
-        //Hand over the exiting node's key range to its successor
-        String exitNodeRange = "exit-update-key-range " + self.keyRange[0] + " " + self.keyRange[1];
-        successorOut.println(exitNodeRange);
+            //Hand over the exiting node's key range to its successor
+            String exitNodeRange = "exit-update-key-range " + self.keyRange[0] + " " + self.keyRange[1];
+            successorOut.println(exitNodeRange);
 
-        //Hand over the exiting node's key value pairs to its successor.
-        successorOut.println(buildKeyValuePairsString(self));
+            //Hand over the exiting node's key value pairs to its successor.
+            successorOut.println(buildKeyValuePairsString(self));
 
-        //Close the successor connections
-        successorSocket.close();
-        successorOut.close();
+            //Close the successor connections
+            successorSocket.close();
+            successorOut.close();
+
+            return "Successful exit!";
+        } catch (Exception e) {
+            return "Unsuccessful exit: " + e.getMessage();
+        }
     }
 
     private static String buildKeyValuePairsString(Node self) {

@@ -77,7 +77,8 @@ public class Nameserver {
                     System.out.println("Updated keyrange: " + self.keyRange[0] + "-" + self.keyRange[1]);
                 }
                 case "exit": {
-                    Node.exit(self);   
+                    String response = Node.exit(self);
+                    System.out.println(response);
                 }
             }
         }

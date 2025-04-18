@@ -70,13 +70,16 @@ public class Bootstrap {
         while (!cmd.equalsIgnoreCase("quit")) {
             System.out.print("Enter a command: ");
             cmd = input.nextLine().trim();
-            String[] parsed = cmd.split(" ");
+            String[] parsed = cmd.split(" ", 3);
             switch (parsed[0]) {
                 case "insert": {
                     //Handles insert, other commands should use Node.sendM to send messages to the specified node
                     System.out.println("Inserting!");
                     int key = Integer.parseInt(parsed[1]);
                     Find node = Node.find(key, self);
+                    if (node == null) {
+                        break;
+                    }
                     Node.sendM(node, "insert " + key + " " + parsed[2]);
                     break;
                 }

@@ -113,6 +113,23 @@ public class Node {
         node.close();
     }
 
+    public static String delete(int key, Find address) throws IOException {
+        String response = "";
+
+        Socket node = new Socket(address.address, address.port);
+        PrintWriter out = new PrintWriter(node.getOutputStream(), true);
+        BufferedReader in = new BufferedReader(new InputStreamReader(node.getInputStream()));
+
+        out.println("delete " + key);
+        response = in.readLine();
+
+        node.close();
+        out.close();
+        in.close();
+
+        return response;
+    }
+
     public static Find enterB(int id, Find address) throws IOException{
         //contact boot
         Socket node = new Socket(address.address, address.port);

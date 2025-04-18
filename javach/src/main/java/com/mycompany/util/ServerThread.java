@@ -50,7 +50,7 @@ public class ServerThread implements Runnable {
                         break;
                     }
                     case "delete": {
-                        //TODO: delete
+                        handleDelete(parsed, out, self);
                         break;
                     }
                     //contact bootstrap initally
@@ -117,6 +117,17 @@ public class ServerThread implements Runnable {
         self.map.put(key, value);
         out.println(("inserted!"));
         System.out.println(self.map.toString());
+    }
+
+    private void handleDelete(String[] parsed, PrintWriter out, Node self) {
+        int key = Integer.parseInt(parsed[1]);
+        if (self.map.get(key) != null) {
+            self.map.remove(key);
+            System.out.println(self.map.toString());
+            out.println("Key-value successfully deleted!");
+        } else {
+            out.println("Key was not present.");
+        }
     }
 
     //send back node info that needs to entered into

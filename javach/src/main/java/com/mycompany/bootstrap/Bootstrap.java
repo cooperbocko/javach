@@ -1,5 +1,6 @@
 package com.mycompany.bootstrap;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -84,6 +85,15 @@ public class Bootstrap {
                     break;
                 }
                 case "delete": {
+                    int key = Integer.parseInt(parsed[1]);
+
+                    //Find the node with the correct key range
+                    Find node = Node.find(key, self);
+
+                    //Delete the key-value pair if it is present
+                    String response = Node.delete(key, node);
+                    
+                    System.out.println(response);
                     break;
                 }
                 default: {

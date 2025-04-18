@@ -221,21 +221,35 @@ public class Node {
 
     private static String buildKeyValuePairsString(Node self) {
         StringBuilder bldr = new StringBuilder("exit-update-key-values ");
-        int[] keyRange = {self.keyRange[0], self.keyRange[1]};
         
-        //To handle the high-low case.
-        if (keyRange[0] > keyRange[1]) {
-            int placeholder = keyRange[0];
-            keyRange[0] = keyRange[1];
-            keyRange[1] = placeholder;
-        }
 
-        for (int i = keyRange[0]; i < keyRange[1]; i++) {
-            String valueToAdd = self.map.get(i);
-            if (valueToAdd != null) {
-                bldr.append(i + " " + valueToAdd + " ");
-            }
-        }
+        if (self.keyRange[0] < self.keyRange[1]) {
+
+            //Handles the normal case (low-high)
+            for (int i = self.keyRange[0]; i < self.keyRange[1]; i++) {
+                String valueToAdd = self.map.get(i);
+                if (valueToAdd != null) {
+                    bldr.append(i + " " + valueToAdd + " ");
+                } //if
+            } //for
+
+        } else {
+
+            //Handle the high-low case.
+            for (int i = self.keyRange[0]; i <= MAX_RANGE; i++) {
+                String valueToAdd = self.map.get(i);
+                if (valueToAdd != null) {
+                    bldr.append(i + " " + valueToAdd + " ");
+                } //if
+            } //for
+            for (int i = 0; i < self.keyRange[1]; i++) {
+                String valueToAdd = self.map.get(i);
+                if (valueToAdd != null) {
+                    bldr.append(i + " " + valueToAdd + " ");
+                } //if
+            } //for
+            
+        } //if
 
         return bldr.toString();
     }

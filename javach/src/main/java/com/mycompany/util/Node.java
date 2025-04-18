@@ -54,6 +54,7 @@ public class Node {
         }
         
         Find res = new Find();
+        res.ids.add(node.id);    
         res.address = node.sAddress;
         res.port = node.sPort;
         int[] range = node.keyRange;

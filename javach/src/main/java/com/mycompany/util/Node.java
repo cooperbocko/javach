@@ -214,33 +214,40 @@ public class Node {
             //Contact the predecessor and have it update its successor to the exiting node's successor
             Socket predSocket = new Socket(self.pAddress, self.pPort);
             PrintWriter predOut = new PrintWriter(predSocket.getOutputStream(), true);
-            String update = "update-s " + self.sAddress + " " + self.sPort;
+            String update = "update-s " + self.sAddress.getHostName() + " " + self.sPort;
             predOut.println(update);
 
             //Close the predecessor connections
             predSocket.close();
             predOut.close();
 
-
-
             //Open a socket to communicate with the exiting node's successor
-            Socket successorSocket = new Socket(self.sAddress, self.sPort);
-            PrintWriter successorOut = new PrintWriter(successorSocket.getOutputStream(), true);
+            //Socket successorSocket = new Socket(self.sAddress, self.sPort);
+            //PrintWriter successorOut = new PrintWriter(successorSocket.getOutputStream(), true);
 
             //Have the exiting node's successor update its predecessor to the exiting node's predecessor
-            update = "update-p " + self.pAddress + " " + self.pPort;
-            successorOut.println(update);
+            update = "update-p " + self.pAddress.getHostName() + " " + self.pPort;
+            Find snode = new Find();
+            snode.address = self.sAddress;
+            snode.port = self.sPort;
+            Node.sendM(snode, update);
+            //successorOut.println(update);
 
             //Hand over the exiting node's key range to its successor
             String exitNodeRange = "exit-update-key-range " + self.keyRange[0] + " " + self.keyRange[1];
-            successorOut.println(exitNodeRange);
+            Node.sendM(snode, exitNodeRange);
+            //successorOut.println(exitNodeRange);
 
             //Hand over the exiting node's key value pairs to its successor.
-            successorOut.println(buildKeyValuePairsString(self));
+            Node.sendM(snode, buildKeyValuePairsString(self));
+            //successorOut.println(buildKeyValuePairsString(self));
 
             //Close the successor connections
-            successorSocket.close();
-            successorOut.close();
+            //successorSocket.close();
+            //successorOut.close();
+
+            //reset node
+            resetNode(self);
 
             return "Successful exit!";
         } catch (Exception e) {
@@ -260,6 +267,7 @@ public class Node {
                 if (valueToAdd != null) {
                     bldr.append(i + " " + valueToAdd + " ");
                 } //if
+                self.map.remove(i);
             } //for
 
         } else {
@@ -270,16 +278,31 @@ public class Node {
                 if (valueToAdd != null) {
                     bldr.append(i + " " + valueToAdd + " ");
                 } //if
+                self.map.remove(i);
             } //for
             for (int i = 0; i < self.keyRange[1]; i++) {
                 String valueToAdd = self.map.get(i);
                 if (valueToAdd != null) {
                     bldr.append(i + " " + valueToAdd + " ");
                 } //if
+                self.map.remove(i);
             } //for
             
         } //if
 
         return bldr.toString();
+    }
+
+    public static void printNodeInfo(Node self) {
+        System.out.println("Key Range: " + self.keyRange[0] + "-" + self.keyRange[1] + " s: " + self.sPort + " p: " + self.pPort); 
+    }
+
+    private static void resetNode(Node self) {
+        self.keyRange = new int[2];
+        self.pAddress = null;
+        self.pPort = -1;
+        self.sAddress = null;
+        self.sPort = -1;
+        self.map = new HashMap<>();
     }
 }

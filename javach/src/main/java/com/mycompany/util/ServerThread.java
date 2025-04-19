@@ -69,10 +69,12 @@ public class ServerThread implements Runnable {
                     }
                     case "exit-update-key-range": {
                         updateKeyRange(parsed, self);
+                        out.println("updated!");
                         break;
                     }
                     case "exit-update-key-values": {
                         updateKeyValues(parsed, self);
+                        out.println("updated");
                         break;
                     }
                     case "update-s": {
@@ -81,6 +83,7 @@ public class ServerThread implements Runnable {
                     }
                     case "update-p": {
                         handleUpdateP(parsed, self);
+                        out.println("updated!");
                         break;
                     }
                     default: {
@@ -88,6 +91,7 @@ public class ServerThread implements Runnable {
                         break;
                     }
                 }
+                Node.printNodeInfo(self);
                 //close connection
                 client.close();
             } catch (IOException e) {
@@ -208,8 +212,23 @@ public class ServerThread implements Runnable {
      * @param self The exiting node's successor
      */
     private static void updateKeyRange(String[] parsed, Node self) {
-        //I think only the first value in the key range needs to be updated
-        self.keyRange[0] = Integer.parseInt(parsed[1]);
+        int b = Integer.parseInt(parsed[1]);
+
+        //check if bootstrap
+        if (self.keyRange[0] == 0 || self.keyRange[1] == 0) {
+            if (b == 1) {
+                //only node left is bootstrap -> reset
+                self.keyRange[0] = 0;
+                self.keyRange[1] = Node.MAX_RANGE;
+            } else {
+                //not only node left
+                self.keyRange[0] = b;
+            }
+        } else {
+            //normal node
+            //I think only the first value in the key range needs to be updated
+            self.keyRange[0] = b;
+        }
     }
 
     /**

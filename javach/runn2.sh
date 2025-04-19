@@ -1,1 +1,0 @@
-java -cp target/javach-1.0-SNAPSHOT.jar com.mycompany.nameserver.Nameserver2

@@ -114,6 +114,7 @@ public class Bootstrap {
                     break;
                 }
             }
+            Node.printNodeInfo(self);
         }
         input.close();
     }

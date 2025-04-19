@@ -83,6 +83,8 @@ public class Nameserver {
                     break;
                 }
             }
+
+            Node.printNodeInfo(self);
         }
         input.close();
     }

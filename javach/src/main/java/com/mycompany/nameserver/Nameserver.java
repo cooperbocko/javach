@@ -55,11 +55,6 @@ public class Nameserver {
         Thread s = new Thread(x);
         s.start();
 
-        //TODO: handle user input to call functions
-        //I think I did this the way you guys wanted, if not feel free to delete it or rewrite it
-        //Open a socket to send commands to the server thread
-        //No need to open a new socket -> just use Node.sendM()
-
         Scanner input = new Scanner(System.in);
         String cmd = "";        
         while (!cmd.equalsIgnoreCase("quit")) {

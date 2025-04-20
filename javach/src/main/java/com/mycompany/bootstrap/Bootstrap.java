@@ -1,6 +1,5 @@
 package com.mycompany.bootstrap;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -65,7 +64,6 @@ public class Bootstrap {
         Thread s = new Thread(x);
         s.start();
 
-        //TODO: get user input to call functions 
         Scanner input = new Scanner(System.in);
         String cmd = "";        
         while (!cmd.equalsIgnoreCase("quit")) {
@@ -81,7 +79,7 @@ public class Bootstrap {
                     if (node == null) {
                         break;
                     }
-                    Node.sendM(node, "insert " + key + " " + parsed[2]);
+                    Node.insert(key, parsed[2], node);
                     break;
                 }
                 case "lookup": {

@@ -35,7 +35,6 @@ public class ServerThread implements Runnable {
                 String[] parsed = request.split(" ");
 
                 //handle request
-                //TODO: add request handlers
                 switch(parsed[0]) {
                     case "find": {
                         handleFind(parsed, out, self);
@@ -103,7 +102,6 @@ public class ServerThread implements Runnable {
         }
     }
 
-    //TODO: Handlers here -> main functions should send a reponse back, any helpers should not
     //finds specific node
     //find key
     public static void handleFind(String[] parsed, PrintWriter out, Node self) {

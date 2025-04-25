@@ -79,6 +79,7 @@ public class Bootstrap {
                     if (node == null) {
                         break;
                     }
+                    System.out.println("Path: " + node.ids.toString());
                     Node.insert(key, parsed[2], node);
                     break;
                 }
@@ -101,6 +102,8 @@ public class Bootstrap {
 
                     //Find the node with the correct key range
                     Find node = Node.find(key, self);
+
+                    System.out.println("Path: " + node.ids.toString());
 
                     //Delete the key-value pair if it is present
                     String response = Node.delete(key, node);
